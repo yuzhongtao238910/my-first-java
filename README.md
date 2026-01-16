@@ -82,3 +82,86 @@ swagger是开发阶段使用的，帮助后端开发人员做接口测试哈
     用在属性上，描述属性信息
 @ApiOperation
     用在方法上，例如Controller的方法，说明方法的用途 作用
+
+
+DROP TABLE IF EXISTS `employee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `employee` (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `name` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '姓名',
+    `username` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '用户名',
+    `password` varchar(64) COLLATE utf8_bin NOT NULL COMMENT '密码',
+    `phone` varchar(11) COLLATE utf8_bin NOT NULL COMMENT '手机号',
+    `sex` varchar(2) COLLATE utf8_bin NOT NULL COMMENT '性别',
+    `id_number` varchar(18) COLLATE utf8_bin NOT NULL COMMENT '身份证号',
+    `status` int NOT NULL DEFAULT '1' COMMENT '状态 0:禁用，1:启用',
+    `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+    `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+    `create_user` bigint DEFAULT NULL COMMENT '创建人',
+    `update_user` bigint DEFAULT NULL COMMENT '修改人',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin COMMENT='员工信息';
+
+
+## 员工模块
+    新增员工
+        需求分析和设计
+            账号、员工姓名、手机号、性别、身份证号
+            employee 员工表
+            注意：   账号唯一
+                    手机号需要符号条件
+                    性别：男或者女
+                    身份证号：校验规则，长度是18位
+            post请求:JSON格式的数据
+                返回的数据是Result
+                /admin/employee
+        代码开发
+            根据新增员工设计接口对应的DTO
+                idNumber
+                name
+                phone
+                sex
+                username
+        功能测试
+        代码完善
+    员工分页查询
+        
+    启用禁用员工账号
+        
+    编辑员工
+        
+    导入分类模块功能代码
+
+
+## 区分
+
+管理端 /admin 作为前缀
+用户端 /user 作为前缀
+
+注意：前端提交的数据和实体类对应的属性差别是比较大的时候，建议使用DTO来封装数据
+
+
+
+✅ MyBatis 官方推荐的返回值只有两类
+1️⃣ void（最常见）
+void insert(Employee employee);
+
+
+纯执行
+
+自增主键通过 employee.id 回填
+
+2️⃣ int（推荐）
+int insert(Employee employee);
+
+
+返回 影响行数
+
+一般是 1
+
+id 依然回填
+
+int rows = employeeMapper.insert(employee);
+Long id = employee.getId();
