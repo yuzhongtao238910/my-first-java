@@ -165,3 +165,18 @@ id 依然回填
 
 int rows = employeeMapper.insert(employee);
 Long id = employee.getId();
+
+
+
+ThreadLocal并不是一个Thread，而是Thread的局部变量
+ThreadLocal为每个线程提供单独一份的存储空间，具有线程的隔离效果，只有再线程内才能获取到对应的值，线程外则不能访问
+
+
+客户端的每次请求都是一个单独的线程
+
+
+
+
+ThreadLocal.set()
+ThreadLocal.get()
+ThreadLocal.remove()

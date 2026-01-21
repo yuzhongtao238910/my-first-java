@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
@@ -50,6 +51,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         // ENDTODO 后期需要进行md5加密，然后再进行比对
         password = DigestUtils.md5DigestAsHex(password.getBytes());
         System.out.println(password);
+        System.out.println(DigestUtils.md5DigestAsHex("123456".getBytes()));
         if (!password.equals(employee.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
@@ -67,7 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee save(EmployeeDTO employeeDTO) {
-
+        System.out.println("当前线程的id：" + Thread.currentThread().getId());
         // 对象的转换
         Employee employee = new Employee();
 
@@ -87,14 +89,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 设置创建人 修改人
         // 指的是当前登陆用户的id 先写死哈 后期需要改为当前的登陆用户的id
         // TODO
+        // 获取当前的登陆用户的id
+        // 基于jwt的认证的方式
+        // 获取当前登陆用户的id
         employee.setCreateUser(10L);
         employee.setUpdateUser(10L);
 
+        Long currentId = BaseContext.getCurrentId();
+        System.out.println("currentId: " + currentId);
 
-        employeeMapper.insert(employee);
+
+        int result = employeeMapper.insert(employee);
 
 
-        // 1- 先判断这个账号是否是唯一的
+
+
+
 
 
         // 2- 判断这个电话号是否是符合格式

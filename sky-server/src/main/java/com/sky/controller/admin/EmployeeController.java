@@ -80,10 +80,14 @@ public class EmployeeController {
 
     /**
      * 新增员工 EmployeeDTO
+     *
+     * 问题1：用户名字已经存在的话，抛出异常后没有处理
+     * 问题2：新增员工的时候，创建人的id和修改人的id设置为了固定的值
      */
     @PostMapping("")
     @ApiOperation(value = "新增员工接口")
     public Result<Employee> saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        System.out.println("当前线程的id：" + Thread.currentThread().getId());
         log.info("新增员工: {}", employeeDTO);
         com.sky.entity.Employee employee = employeeService.save(employeeDTO);
         log.info("最后的员工数据:{}", employee);
