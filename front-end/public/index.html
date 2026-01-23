@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>SPA 模拟 Sentry pageload</title>
+    <!-- <script src="/bundle.tracing.replay.feedback.min.js"></script> -->
+    <script src="/bundle.tracing.min.js"></script>
+    <script src="/16cf1bdc1a4f6edcebe1fb6ce019d3b2.min.js"></script>
+    <script src="http://localhost:7777/slow.js"></script>
+    <!-- <script src="https://browser.sentry-cdn.com/7.60.0/bundle.tracing.min.js" crossorigin="anonymous"></script> -->
+</head>
+
+<body>
+    <h1>首页</h1>
+    <nav>
+        <button id="btnPage1">Page1</button>
+        <button id="btnPage2">Page2</button>
+        <button id="btnPage3">Page3</button>
+    </nav>
+    <div id="content">这是首页内容</div>
+
+    <script>
+        // console.log(Sentry.getCurrentHub)
+        Sentry.onLoad(function () {
+            // console.log(Sentry.getCurrentHub, 22)
+            Sentry.init({
+                dsn: "http://16cf1bdc1a4f6edcebe1fb6ce019d3b2@sentry.edianzu.cn/74",
+                // integrations: [
+                //     // Sentry.browserTracingIntegration(),
+                // ],
+                environment: "local",
+                // You can add any additional configuration here
+            });
+        });
+
+        function startPageload(name) {
+        }
+
+        // 点击菜单动态加载 JS
+
+        var transaction = null
+        function loadScript(url, callback) {
+
+            const script = document.createElement('script');
+            script.src = url;
+            script.onload = callback;
+            // debugger
+            document.body.appendChild(script);
+
+        }
+
+        document.getElementById('btnPage1').onclick = () => {
+
+            window.setSentrySpan("slow1")
+            loadScript('/slow1.js', () => {
+                // debugger
+                startPageload('Page1');
+                // debugger
+                const span = Sentry.getActiveSpan();
+                console.log('我存在页面span1', span)
+
+                setTimeout(() => {
+                    window.__sentryInactiveSpan && window.__sentryInactiveSpan.end()
+                    if (window.__sentryInactiveSpan) {
+                        window.__sentryInactiveSpan = null
+                    }
+                }, 10)
+            });
+        };
+
+        document.getElementById('btnPage2').onclick = () => {
+
+            window.setSentrySpan("slow2")
+            loadScript('/slow2.js', () => {
+                startPageload('Page2');
+                const span = Sentry.getActiveSpan();
+                console.log('我存在页面span2', span)
+                setTimeout(() => {
+                    window.__sentryInactiveSpan && window.__sentryInactiveSpan.end()
+                    if (window.__sentryInactiveSpan) {
+                        window.__sentryInactiveSpan = null
+                    }
+                }, 10)
+            });
+        };
+
+        // document.getElementById('btnPage1').onclick = () => {
+
+        //     window.setSentrySpan("slow1")
+        //     loadScript('/slow1.js', () => {
+        //         startPageload('Page1');
+                
+        //     });
+        // };
+
+        document.getElementById('btnPage3').onclick = () => {
+
+            window.setSentrySpan("slow3")
+            loadScript('/slow3.js', () => {
+                startPageload('Page3');
+                const span = Sentry.getActiveSpan();
+                console.log('我存在页面span3', span)
+                setTimeout(() => {
+                    window.__sentryInactiveSpan && window.__sentryInactiveSpan.end()
+                    if (window.__sentryInactiveSpan) {
+                        window.__sentryInactiveSpan = null
+                    }
+                }, 10)
+            });
+        };
+
+
+
+        window.setSentrySpan = function (name) {
+            // Sentry.onLoad(function() {
+                const span = Sentry.getActiveSpan();
+                // console.log('我存在页面span', span, name)
+
+                span.end()
+
+
+                // if (span && name) {
+                //     span.updateName(name);
+                // }
+                window.__sentryInactiveSpan = Sentry.startInactiveSpan({ name, op:"pageload"});
+                window.currentSpanName = name;
+            // })
+        }
+
+    </script>
+</body>
+
+</html>
