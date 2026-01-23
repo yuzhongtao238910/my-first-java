@@ -1,16 +1,20 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +74,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee save(EmployeeDTO employeeDTO) {
         System.out.println("当前线程的id：" + Thread.currentThread().getId());
+//        Long currentUser = Thread.currentThread().getId();
         // 对象的转换
         Employee employee = new Employee();
 
@@ -92,11 +97,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 获取当前的登陆用户的id
         // 基于jwt的认证的方式
         // 获取当前登陆用户的id
-        employee.setCreateUser(10L);
-        employee.setUpdateUser(10L);
+
 
         Long currentId = BaseContext.getCurrentId();
         System.out.println("currentId: " + currentId);
+
+
+        employee.setCreateUser(currentId);
+        employee.setUpdateUser(currentId);
 
 
         int result = employeeMapper.insert(employee);
@@ -110,5 +118,27 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 2- 判断这个电话号是否是符合格式
 
         return employee;
+    }
+
+
+    /**
+     * 分页查询
+     * @param employeePageQueryDTO
+     * @return
+     */
+    @Override
+    public PageResult pageResult(EmployeePageQueryDTO employeePageQueryDTO) {
+
+        // select * from employee limit 0, 10
+
+        // 新的插件 mybatis pageHelper
+
+        // 一个线程里可以有 多个 ThreadLocal
+        // 开始分页查询, 这个使用了这个ThreadLocal
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+
+        Page<Employee> result = employeeMapper.pageQuery(employeePageQueryDTO);
+
+        return new PageResult(result.getTotal(), result.getResult());
     }
 }
