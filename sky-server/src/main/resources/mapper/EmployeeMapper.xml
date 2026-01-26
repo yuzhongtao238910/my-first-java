@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.EmployeeMapper">
-<!--    resultType描述的是集合里面的元素类型-->
+
+    <!--    resultType描述的是集合里面的元素类型-->
 <!--    &#45;&#45;         limit的关键字就不需要自己写了-->
     <select id="pageQuery" resultType="com.sky.entity.Employee">
         select * from employee
@@ -13,4 +14,39 @@
         </where>
         order by create_time desc
     </select>
+
+
+    <update id="update" parameterType="com.sky.entity.Employee">
+        update employee
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="sex != null and sex != ''">
+                sex = #{sex},
+            </if>
+            <if test="idNumber != null">
+                idNumber = #{idNumber},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

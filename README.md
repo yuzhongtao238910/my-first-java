@@ -188,3 +188,18 @@ ThreadLocal.remove()
 方式1：在属性加注解，对日期格式化@JsonFormat()
 方式2：再webMvcConfiguration之中springmvc 的消息转换器，统一对日期类型进行格式化处理
 
+
+
+q启用禁用员工账号
+需求分析和设计哈
+
+
+
+可以对启用得员工账号进行禁用
+可以对禁用得进行启用工作
+
+
+
+status：状态 0:禁用，1:启用
+
+id：

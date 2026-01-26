@@ -1,5 +1,5 @@
 package com.sky.service.impl;
-
+import lombok.extern.slf4j.Slf4j;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
@@ -143,5 +143,31 @@ public class EmployeeServiceImpl implements EmployeeService {
         System.out.println(result.getResult());
 
         return new PageResult(result.getTotal(), result.getResult());
+    }
+
+
+    @Override
+    public int startOrStop(Integer status, Long id) {
+
+        // update employee set status = ? where id = ?
+
+
+
+        // 方式1：创建一个employee对象
+//        Employee employee = new Employee();
+//        employee.setStatus(status);
+//        employee.setId(id);
+
+        // 方式2：使用builder
+        Employee employee = Employee.builder()
+                        .status(status)
+                        .id(id)
+                        .build();
+
+        int result = employeeMapper.update(employee);
+
+        System.out.println(result);
+//        log.info("当前影响得行数:{}", result);
+        return result;
     }
 }

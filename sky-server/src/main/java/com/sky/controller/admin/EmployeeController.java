@@ -104,4 +104,21 @@ public class EmployeeController {
         return Result.success(pageResult);
     }
 
+
+    /**
+     * 启用禁用员工账号
+     */
+
+//    /admin/employee/status/{status}?id=111
+    @PostMapping("/status/{status}")
+    @ApiOperation(value = "启用禁用员工账号接口")
+    public Result startOtStop(@PathVariable Integer status, Long id) {
+        log.info("路径参数:{}", status);
+        log.info("员工id：{}", id);
+        log.info("员工：{},{}", id, status);
+        int res = employeeService.startOrStop(status, id);
+        log.info("影响得行数：{}", res);
+        return Result.success();
+    }
+
 }
