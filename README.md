@@ -183,3 +183,8 @@ ThreadLocal.remove()
 
 员工分页的查询
 
+
+
+方式1：在属性加注解，对日期格式化@JsonFormat()
+方式2：再webMvcConfiguration之中springmvc 的消息转换器，统一对日期类型进行格式化处理
+

@@ -59,5 +59,5 @@ app.use(
 
 // 启动服务器
 app.listen(PORT, () => {
-  console.log(`Mock server running at http://localhost:${PORT}`);
+    console.log(`Mock server running at http://localhost:${PORT}`);
 });
